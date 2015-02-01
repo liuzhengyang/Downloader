@@ -25,6 +25,12 @@ public class DownloadThread implements Runnable {
     // 当前下载位置
     private int currentPos;
 
+    public boolean isFinish() {
+        return finish;
+    }
+
+    private boolean finish;
+
     public int getStart() {
         return start;
     }
@@ -50,7 +56,7 @@ public class DownloadThread implements Runnable {
     @Override
     public void run() {
         try {
-            URL url = new URL(url_str);
+            URL url = new URL(URLProcessor.getFinalConnection(url_str));
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestProperty("Range", "bytes=" + start + "-" + end);
             connection.connect();
@@ -65,6 +71,7 @@ public class DownloadThread implements Runnable {
                 randomAccessFile.write(buffer, 0, hasRead);
                 currentPos += hasRead;
             }
+            this.finish = true;
             System.out.println("Thread" + this.getName() + " finish");
         } catch (IOException e) {
             e.printStackTrace();

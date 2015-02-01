@@ -10,20 +10,13 @@ import java.net.*;
  */
 public class URLProcessor {
 
-
-
-    private URL url;
-    private String fileName;
-
-    public URLProcessor(URL url) {
-        this.url = url;
+    private URLProcessor(){
+        throw new IllegalStateException("不能创建私有构造器");
     }
 
-    public String getFileName(){
-        return fileName;
-    }
-
-    public String getFileName(HttpURLConnection connection) throws UnsupportedEncodingException, URISyntaxException {
+    public static String getFileName(String urlStr) throws IOException, URISyntaxException {
+        URL url = new URL(urlStr);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         String encode = "utf-8"; // 默认为utf-8
         String content_type = connection.getHeaderField("Content-Type");
         if(content_type!=null){
@@ -50,7 +43,8 @@ public class URLProcessor {
     }
 
 
-    public HttpURLConnection getFinalConnection() throws IOException {
+    public static String getFinalConnection(String urlStr) throws IOException {
+        URL url = new URL(urlStr);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         // 不重定向
         connection.setInstanceFollowRedirects(false);
@@ -59,9 +53,9 @@ public class URLProcessor {
             String location = connection.getHeaderField("Location");
             System.out.println(location);
 
-            return (HttpURLConnection)new URL(location).openConnection();
+            return location;
         }else{
-            return connection;
+            return urlStr;
         }
     }
 }

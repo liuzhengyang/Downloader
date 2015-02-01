@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class Downloader {
 
     private String downloadFileName;
 
+
+
     // 当前下载位置
     private int currentPos;
     // 上一次下载位置
@@ -30,7 +33,7 @@ public class Downloader {
 
     private int fileSize;
 
-    private RandomAccessFile randomAccessFile;
+    private int hasDownloaded;
 
 
     public Downloader(){
@@ -45,10 +48,6 @@ public class Downloader {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getDownloadFileName() {
         return downloadFileName;
     }
@@ -57,14 +56,10 @@ public class Downloader {
         this.downloadFileName = downloadFileName;
     }
 
-    // 从url中获取最后一个/后的字符串作为文件名
-    private void extractFileName(){
 
-        int posOfSlash = this.getUrl().lastIndexOf("/");
-        this.setDownloadFileName(this.getUrl().substring(posOfSlash + 1));
-    }
 
-    public void download() throws IOException {
+
+    public void download() throws IOException, URISyntaxException {
         if(url == null || "".equals(url)){
             System.out.println("URL不能为空");
             return ;
@@ -76,7 +71,7 @@ public class Downloader {
     /**
      * 解析url获得所要下载内容的信息
      */
-    private void analysizeUrl() throws IOException {
+    private void analysizeUrl() throws IOException, URISyntaxException {
         URL url = null;
         try {
             url = new URL(getUrl());
@@ -84,18 +79,11 @@ public class Downloader {
             System.out.println("url格式不正确");
             e.printStackTrace();
         }
-        HttpURLConnection connection_temp = (HttpURLConnection) url.openConnection();
 
-        connection_temp.connect();
-        String fileName = connection_temp.getHeaderField("Content-Disposition");
-        System.out.println(fileName);
-        if(downloadFileName == null){
-            // 如未设置下载名，则按照url链接最后的名字确定
-            extractFileName();
-            System.out.println(getDownloadFileName());
-        }
+        this.downloadFileName = URLProcessor.getFileName(getUrl());
+
+        HttpURLConnection connection_temp = (HttpURLConnection) url.openConnection();
         this.fileSize = connection_temp.getContentLength();
-        System.out.println(connection_temp.getResponseMessage());
         connection_temp.disconnect();
         System.out.println("下载文件大小为" + this.fileSize + " bytes");
     }
@@ -129,12 +117,18 @@ public class Downloader {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                int threadNum = 0;
                 lastPos = currentPos;
+                hasDownloaded = 0;
                 currentPos = 0;
                 for(DownloadThread downloadThread : downloadTask){
+                    if(!downloadThread.isFinish()){
+                        threadNum++;
+                    }
                     currentPos += downloadThread.getCurrentPos() - downloadThread.getStart();
+                    hasDownloaded += downloadThread.getCurrentPos() - downloadThread.getStart();
                 }
-                System.out.println(" -- speed -- " + (currentPos - lastPos)/1000 + " KB/s");
+                System.out.println(threadNum + " threads " + " -- speed -- " + (currentPos - lastPos)/1000 + " KB/s" + "  " + hasDownloaded + "/" + fileSize);
             }
         }, 0, 1000);
         for(Thread t : downloadThreadList){
@@ -148,11 +142,7 @@ public class Downloader {
 
         long cost = end - start;
         System.out.println(" Download cost " + cost/1000 + " seconds");
-        System.out.println(" Average speed " + (double)fileSize/cost + " KB/s");
-        ResourceUtil.closeResource(randomAccessFile);
-
-
-
+        System.out.println(" Average speed " + (double) fileSize / cost + " KB/s");
 
     }
 

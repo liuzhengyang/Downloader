@@ -19,13 +19,13 @@ public class DownloaderTest {
     private static final Logger logger = LogManager.getLogger(DownloaderTest.class);
 
     @Test
-    public void testDownload() throws IOException {
+    public void testDownload() throws IOException, URISyntaxException {
 
 //        Downloader downloader = new Downloader("http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.0.18/bin/apache-tomcat-8.0.18.zip");
 //        Downloader downloader = new Downloader("http://127.0.0.1:8080/download/Wildlife.wmv");
 //        Downloader downloader = new Downloader("http://211wangxiao.com/main/main/index.jsp");
-//        Downloader downloader = new Downloader("http://dldx.csdn.net/fd.php?i=147444700947175&s=7998650e7d34c4209f18bd333a85e395");
-        Downloader downloader = new Downloader("http://apache.petsads.us/nutch/1.9/apache-nutch-1.9-bin.zip");
+        Downloader downloader = new Downloader("http://dldx.csdn.net/fd.php?i=147444700947175&s=7998650e7d34c4209f18bd333a85e395");
+//        Downloader downloader = new Downloader("http://apache.petsads.us/nutch/1.9/apache-nutch-1.9-bin.zip");
         long start = System.currentTimeMillis();
 //        downloader.setDownloadFileName("tomcat.zip");
         downloader.download();
@@ -39,8 +39,8 @@ public class DownloaderTest {
      */
     @Test
     public void compareFile(){
-        File file1 = new File("G:\\apache-tomcat-8.0.17\\webapps\\download/Lighthouse.jpg");
-        File file2 = new File("C:\\Users\\liuzhengyang\\IdeaProjects\\apiHack/Lighthouse.jpg");
+        File file1 = new File("G:\\apache-tomcat-8.0.17\\webapps\\download/Wildlife.wmv");
+        File file2 = new File("G:\\迅雷下载\\Downloader/Wildlife.wmv");
 
         try(
                 InputStream inputStream1 = new FileInputStream(file1);
