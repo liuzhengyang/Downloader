@@ -69,15 +69,14 @@ public class Downloader {
             System.out.println("URL不能为空");
             return ;
         }
-        if(downloadFileName == null){
-            // 如未设置下载名，则按照url链接最后的名字确定
-            extractFileName();
-            System.out.println(getDownloadFileName());
-        }
+        analysizeUrl();
         doDownload();
     }
 
-    private void doDownload() throws IOException {
+    /**
+     * 解析url获得所要下载内容的信息
+     */
+    private void analysizeUrl() throws IOException {
         URL url = null;
         try {
             url = new URL(getUrl());
@@ -86,11 +85,22 @@ public class Downloader {
             e.printStackTrace();
         }
         HttpURLConnection connection_temp = (HttpURLConnection) url.openConnection();
+
         connection_temp.connect();
+        String fileName = connection_temp.getHeaderField("Content-Disposition");
+        System.out.println(fileName);
+        if(downloadFileName == null){
+            // 如未设置下载名，则按照url链接最后的名字确定
+            extractFileName();
+            System.out.println(getDownloadFileName());
+        }
         this.fileSize = connection_temp.getContentLength();
+        System.out.println(connection_temp.getResponseMessage());
         connection_temp.disconnect();
         System.out.println("下载文件大小为" + this.fileSize + " bytes");
+    }
 
+    private void doDownload() throws IOException {
         File file = new File(getDownloadFileName());
 
         List<DownloadThread> downloadTask = new ArrayList<>();
