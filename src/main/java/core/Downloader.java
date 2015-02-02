@@ -115,6 +115,7 @@ public class Downloader {
         downloadThreadList.forEach(e -> e.start());
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
+            int timeCost = 0;
             @Override
             public void run() {
                 int threadNum = 0;
@@ -128,7 +129,10 @@ public class Downloader {
                     currentPos += downloadThread.getCurrentPos() - downloadThread.getStart();
                     hasDownloaded += downloadThread.getCurrentPos() - downloadThread.getStart();
                 }
-                System.out.println(threadNum + " threads " + " -- speed -- " + (currentPos - lastPos)/1000 + " KB/s" + "  " + hasDownloaded + "/" + fileSize);
+                int currentSpeed =(currentPos - lastPos)/1000;
+                String remainTime = currentSpeed <= 0 ? "--" : (fileSize - hasDownloaded)/currentSpeed + "s";
+                timeCost++;
+                System.out.println(timeCost + " seconds " + threadNum + " threads " + " -- speed -- " + currentSpeed + " KB/s" + "  " + hasDownloaded + "/" + fileSize + " remain " + remainTime);
             }
         }, 0, 1000);
         for(Thread t : downloadThreadList){

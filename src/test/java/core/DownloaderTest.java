@@ -22,9 +22,11 @@ public class DownloaderTest {
     public void testDownload() throws IOException, URISyntaxException {
 
 //        Downloader downloader = new Downloader("http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.0.18/bin/apache-tomcat-8.0.18.zip");
-//        Downloader downloader = new Downloader("http://127.0.0.1:8080/download/Wildlife.wmv");
+//        Downloader downloader = new Downloader("http://download-cf.jetbrains.com/upsource/upsource-1.0.12566.zip");
+        Downloader downloader = new Downloader("http://bj.dl.baidupcs.com/file/b758144089eb4363674625cc9177f638?bkt=p-4bf175f5731ddd632e2830c06b87e9f6&fid=1026168496-250528-3997412805&time=1422891529&sign=FDTAXERLBH-DCb740ccc5511e5e8fedcff06b081203-SOrVhoE5uj9HLatNndDyr7AVXIk%3D&to=abp&fm=Qin,B,G,e&newver=1&newfm=1&flow_ver=3&sl=81723468&expires=8h&rt=sh&r=305737040&mlogid=225118573&vuk=-&vbdid=2217814841&fin=TreeDBNotes%20Pro%20v4.34.rar&fn=TreeDBNotes%20Pro%20v4.34.rar");
+//        Downloader downloader = new Downloader("http://211wangxiao.com/student/exportAllCol.211");
 //        Downloader downloader = new Downloader("http://211wangxiao.com/main/main/index.jsp");
-        Downloader downloader = new Downloader("http://dldx.csdn.net/fd.php?i=147444700947175&s=7998650e7d34c4209f18bd333a85e395");
+//        Downloader downloader = new Downloader("http://dldx.csdn.net/fd.php?i=147444700947175&s=7998650e7d34c4209f18bd333a85e395");
 //        Downloader downloader = new Downloader("http://apache.petsads.us/nutch/1.9/apache-nutch-1.9-bin.zip");
         long start = System.currentTimeMillis();
 //        downloader.setDownloadFileName("tomcat.zip");
@@ -42,25 +44,32 @@ public class DownloaderTest {
         File file1 = new File("G:\\apache-tomcat-8.0.17\\webapps\\download/Wildlife.wmv");
         File file2 = new File("G:\\迅雷下载\\Downloader/Wildlife.wmv");
 
-        try(
-                InputStream inputStream1 = new FileInputStream(file1);
-                InputStream inputStream2 = new FileInputStream(file2)
-        ){
-            int c;
-            while((c = inputStream1.read()) == inputStream2.read()){
-//                System.out.println(c);
-                if(c == -1){
-                    break;
-                }
-            }
-            if(c!=-1){
-                System.out.println(file1.getName() + " content not equals to " + file2.getName());
-            }else{
-                System.out.println("Equals");
-            }
-        }catch (IOException e){
-            e.printStackTrace();
+        // 如果两个文件内容长度不相等则不相同
+        if(file1.length() != file2.length()){
+            System.out.println(file1.getName() + " content not equals to " + file2.getName());
         }
+
+
+
+//        try(
+//                InputStream inputStream1 = new FileInputStream(file1);
+//                InputStream inputStream2 = new FileInputStream(file2)
+//        ){
+//            int c;
+//            while((c = inputStream1.read()) == inputStream2.read()){
+////                System.out.println(c);
+//                if(c == -1){
+//                    break;
+//                }
+//            }
+//            if(c!=-1){
+//                System.out.println(file1.getName() + " content not equals to " + file2.getName());
+//            }else{
+//                System.out.println("Equals");
+//            }
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
 
     }
 

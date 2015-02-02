@@ -32,10 +32,11 @@ public class URLProcessor {
             System.out.println(" disposition " + disposition);
             disposition = URLDecoder.decode(disposition, encode);
             String filename = disposition.substring(disposition.indexOf("filename") + "filename".length());
-            System.out.println("filename = " + filename);
             if(filename.startsWith("*=")){
+                System.out.println("filename = " + filename);
                 return filename.substring("*=UTF-8''".length());
             }else{
+                System.out.println("filename = " + filename);
                 return filename.substring(1);
             }
         }
