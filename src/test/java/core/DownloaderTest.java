@@ -23,7 +23,9 @@ public class DownloaderTest {
 
 //        Downloader downloader = new Downloader("http://mirrors.koehn.com/apache/tomcat/tomcat-8/v8.0.18/bin/apache-tomcat-8.0.18.zip");
 //        Downloader downloader = new Downloader("http://download-cf.jetbrains.com/upsource/upsource-1.0.12566.zip");
-        Downloader downloader = new Downloader("http://bj.dl.baidupcs.com/file/b758144089eb4363674625cc9177f638?bkt=p-4bf175f5731ddd632e2830c06b87e9f6&fid=1026168496-250528-3997412805&time=1422891529&sign=FDTAXERLBH-DCb740ccc5511e5e8fedcff06b081203-SOrVhoE5uj9HLatNndDyr7AVXIk%3D&to=abp&fm=Qin,B,G,e&newver=1&newfm=1&flow_ver=3&sl=81723468&expires=8h&rt=sh&r=305737040&mlogid=225118573&vuk=-&vbdid=2217814841&fin=TreeDBNotes%20Pro%20v4.34.rar&fn=TreeDBNotes%20Pro%20v4.34.rar");
+//        Downloader downloader = new Downloader("http://bj.dl.baidupcs.com/file/b758144089eb4363674625cc9177f638?bkt=p-4bf175f5731ddd632e2830c06b87e9f6&fid=1026168496-250528-3997412805&time=1422891529&sign=FDTAXERLBH-DCb740ccc5511e5e8fedcff06b081203-SOrVhoE5uj9HLatNndDyr7AVXIk%3D&to=abp&fm=Qin,B,G,e&newver=1&newfm=1&flow_ver=3&sl=81723468&expires=8h&rt=sh&r=305737040&mlogid=225118573&vuk=-&vbdid=2217814841&fin=TreeDBNotes%20Pro%20v4.34.rar&fn=TreeDBNotes%20Pro%20v4.34.rar");
+//        Downloader downloader = new Downloader("http://downmini.kugou.com/kugou7680.exe");
+        Downloader downloader = new Downloader("http://embed.wistia.com/deliveries/adf798e7a87ab7dc5384e91d40ff93ea732536a4/WebHD_720p.mp4%3F__gda__%3D1402143418_8bce21c988cec2fd3c01c1ffedebd579%26amp%3Bfiledownload%3Dattachment%253Bfilename%253Dtutorial-intro-2.avi.mp4");
 //        Downloader downloader = new Downloader("http://211wangxiao.com/student/exportAllCol.211");
 //        Downloader downloader = new Downloader("http://211wangxiao.com/main/main/index.jsp");
 //        Downloader downloader = new Downloader("http://dldx.csdn.net/fd.php?i=147444700947175&s=7998650e7d34c4209f18bd333a85e395");
