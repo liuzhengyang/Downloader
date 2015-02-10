@@ -39,7 +39,9 @@ public class App3 {
 
     private void consume() throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
-        Thread.sleep(2000);
+        System.out.println("Here");
+        Thread.sleep(4000);
+        System.out.println("After sleep");
         synchronized (this){
             System.out.println("Waiting for return key .   ");
             scanner.nextLine();
