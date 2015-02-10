@@ -10,10 +10,40 @@ import java.net.*;
  */
 public class URLProcessor {
 
-    private URLProcessor(){
-        throw new IllegalStateException("不能创建私有构造器");
+    public URLProcessor(){
+        throw new IllegalStateException("");
     }
 
+
+    /**
+     * 通过url得到资源详细信息
+     * @param urlStr
+     * @return
+     */
+    public ResourceInfo getResourceInfo(String urlStr) throws IOException {
+        ResourceInfo resourceInfo = new SimpleResourceInfo();
+        URL url = new URL(urlStr);
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
+
+
+
+        return resourceInfo;
+    }
+
+    private String doGetFileName(HttpURLConnection connection){
+        String encode = "utf-8"; // 默认字符编码为utf-8
+        String contentType = connection.getHeaderField("Content-Type");
+        return contentType;
+    }
+
+    /**
+     * 从url字符串判断所要下载文件在服务器上的名字
+     * @param urlStr
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public static String getFileName(String urlStr) throws IOException, URISyntaxException {
         URL url = new URL(urlStr);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
