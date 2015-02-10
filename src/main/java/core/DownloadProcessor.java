@@ -11,7 +11,7 @@ import java.net.URL;
  * 下载线程
  * Created by liuzhengyang on 2015/2/1.
  */
-public class DownloadThread implements Runnable {
+public class DownloadProcessor implements Runnable {
 
     private RandomAccessFile randomAccessFile;
     private File file;
@@ -43,7 +43,7 @@ public class DownloadThread implements Runnable {
         return currentPos;
     }
 
-    public DownloadThread(File file, int start, int end, String url_str){
+    public DownloadProcessor(File file, int start, int end, String url_str){
         this.name = file.getName() + " " + start;
         this.file = file;
         this.start = start;

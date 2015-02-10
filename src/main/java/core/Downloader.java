@@ -3,7 +3,6 @@ package core;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -22,56 +21,53 @@ public class Downloader {
     //下载文件url地址
     private String url;
 
+    // 下载文件名
     private String downloadFileName;
 
-
+    // 下载线程数
+    private int threadNumber;
 
     // 当前下载位置
     private int currentPos;
     // 上一次下载位置
     private int lastPos;
 
+    // 文件大小
     private int fileSize;
 
+    // 是否已已经下载的大小
     private int hasDownloaded;
 
+    // 下载资源
+    private ResourceInfo resourceInfo;
 
-    public Downloader(){
-        this(null);
-    }
+    // 分块任务list
+    List<DownloadProcessor> downloadTask = new ArrayList<>();
+    // 线程list
+    List<Thread> downloadThreadList = new ArrayList<>();
 
-    public Downloader(String url){
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getDownloadFileName() {
-        return downloadFileName;
-    }
-
-    public void setDownloadFileName(String downloadFileName) {
-        this.downloadFileName = downloadFileName;
-    }
+    // 初始时开启的线程数
+    int threadNum = 20;
 
 
-
-
+    /**
+     * 开始下载
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public void download() throws IOException, URISyntaxException {
         if(url == null || "".equals(url)){
             System.out.println("URL不能为空");
             return ;
         }
-        analysizeUrl();
+        analyzeUrl();
         doDownload();
     }
 
     /**
      * 解析url获得所要下载内容的信息
      */
-    private void analysizeUrl() throws IOException, URISyntaxException {
+    private void analyzeUrl() throws IOException, URISyntaxException {
         URL url = null;
         try {
             url = new URL(getUrl());
@@ -90,11 +86,6 @@ public class Downloader {
 
     private void doDownload() throws IOException {
         File file = new File(getDownloadFileName());
-
-        List<DownloadThread> downloadTask = new ArrayList<>();
-        List<Thread> downloadThreadList = new ArrayList<>();
-
-        int threadNum = 20;
         int each_size = this.fileSize / threadNum;
         for(int i = 0; i < threadNum; i ++){
             int start = each_size * i;
@@ -105,9 +96,9 @@ public class Downloader {
                 end = this.fileSize % threadNum == 0 ? start + each_size : this.fileSize;
             }
 
-            DownloadThread downloadThread = new DownloadThread(file, start, end, getUrl());
-            Thread thread = new Thread(downloadThread);
-            downloadTask.add(downloadThread);
+            DownloadProcessor downloadProcessor = new DownloadProcessor(file, start, end, getUrl());
+            Thread thread = new Thread(downloadProcessor);
+            downloadTask.add(downloadProcessor);
             downloadThreadList.add(thread);
         }
 
@@ -122,12 +113,12 @@ public class Downloader {
                 lastPos = currentPos;
                 hasDownloaded = 0;
                 currentPos = 0;
-                for(DownloadThread downloadThread : downloadTask){
-                    if(!downloadThread.isFinish()){
+                for(DownloadProcessor downloadProcessor : downloadTask){
+                    if(!downloadProcessor.isFinish()){
                         threadNum++;
                     }
-                    currentPos += downloadThread.getCurrentPos() - downloadThread.getStart();
-                    hasDownloaded += downloadThread.getCurrentPos() - downloadThread.getStart();
+                    currentPos += downloadProcessor.getCurrentPos() - downloadProcessor.getStart();
+                    hasDownloaded += downloadProcessor.getCurrentPos() - downloadProcessor.getStart();
                 }
                 int currentSpeed =(currentPos - lastPos)/1000;
                 String remainTime = currentSpeed <= 0 ? "--" : (fileSize - hasDownloaded)/currentSpeed + "s";
@@ -150,5 +141,34 @@ public class Downloader {
 
     }
 
+
+    /**
+     * 暂停下载，暂不保存持久化状态到硬盘中
+     */
+    private void pause(){
+//        for()
+    }
+
+
+
+    public Downloader(){
+        this(null);
+    }
+
+    public Downloader(String url){
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getDownloadFileName() {
+        return downloadFileName;
+    }
+
+    public void setDownloadFileName(String downloadFileName) {
+        this.downloadFileName = downloadFileName;
+    }
 
 }
