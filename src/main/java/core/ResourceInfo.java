@@ -6,5 +6,6 @@ package core;
  */
 public interface ResourceInfo {
     String getPath();
-    int length();
+    long length();
+    String getFileName();
 }

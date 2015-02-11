@@ -11,7 +11,7 @@ import java.net.*;
 public class URLProcessor {
 
     public URLProcessor(){
-        throw new IllegalStateException("");
+
     }
 
 
@@ -20,21 +20,49 @@ public class URLProcessor {
      * @param urlStr
      * @return
      */
-    public ResourceInfo getResourceInfo(String urlStr) throws IOException {
-        ResourceInfo resourceInfo = new SimpleResourceInfo();
+    public ResourceInfo getResourceInfo(String urlStr) throws IOException, URISyntaxException {
+        SimpleResourceInfo resourceInfo = new SimpleResourceInfo();
         URL url = new URL(urlStr);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
-
-
-
+        resourceInfo.setFileName(doGetFileName(connection));
+        resourceInfo.setLength(doGetFileLength(connection));
+        connection.disconnect();
         return resourceInfo;
     }
 
-    private String doGetFileName(HttpURLConnection connection){
+    // 得到文件长度
+    public long doGetFileLength(HttpURLConnection connection){
+        return connection.getContentLength();
+    }
+
+    public String doGetFileName(HttpURLConnection connection) throws UnsupportedEncodingException, URISyntaxException {
+
+        // 判断编码encode
         String encode = "utf-8"; // 默认字符编码为utf-8
         String contentType = connection.getHeaderField("Content-Type");
-        return contentType;
+        if(contentType!=null){
+            String encodeGet = contentType.substring(contentType.indexOf("charset=") + "charset=".length()).trim();
+            if(encodeGet!=null){
+                // 取消最后的引号
+                encode = encode.substring(0, encode.length() - 1);
+            }
+        }
+
+        // 如果是采用Content-Disposition方式指明
+        String disposition = connection.getHeaderField("Content-Disposition");
+        if(disposition != null){
+            disposition = URLDecoder.decode(disposition, encode);
+            String filename = disposition.substring(disposition.indexOf("filename") + "filename".length());
+            if(filename.startsWith("*=")){
+                return filename.substring("*=UTF-8''".length());
+            }else{
+                return filename.substring(1);
+            }
+        }
+
+        // 其他情况则返回.最后的文件名
+        return connection.getURL().toURI().getPath().substring(connection.getURL().getPath().lastIndexOf("/") + 1);
     }
 
     /**

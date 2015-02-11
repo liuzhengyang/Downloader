@@ -56,7 +56,9 @@ public class DownloadProcessor implements Runnable {
     @Override
     public void run() {
         try {
-            URL url = new URL(URLProcessor.getFinalConnection(url_str));
+//            URL url = new URL(URLProcessor.getFinalConnection(url_str));
+            URL url = new URL(url_str);
+
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestProperty("Range", "bytes=" + start + "-" + end);
             connection.connect();
