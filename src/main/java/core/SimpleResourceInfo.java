@@ -6,7 +6,8 @@ package core;
 public class SimpleResourceInfo implements ResourceInfo {
 
     private String path;
-    private int length;
+    private long length;
+    private String fileName;
 
     public SimpleResourceInfo(){
 
@@ -16,11 +17,15 @@ public class SimpleResourceInfo implements ResourceInfo {
         this.path = path;
     }
 
-    public void setLength(int length) {
+    public void setLength(long length) {
         this.length = length;
     }
 
-    public SimpleResourceInfo(String path, int length){
+    public void setFileName(String fileName){
+        this.fileName = fileName;
+    }
+
+    public SimpleResourceInfo(String path, long length){
         this.path = path;
         this.length = length;
     }
@@ -31,7 +36,21 @@ public class SimpleResourceInfo implements ResourceInfo {
     }
 
     @Override
-    public int length() {
+    public long length() {
         return length;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleResourceInfo{" +
+                "path='" + path + '\'' +
+                ", length=" + length +
+                ", fileName='" + fileName + '\'' +
+                '}';
     }
 }

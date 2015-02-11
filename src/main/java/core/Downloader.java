@@ -41,13 +41,19 @@ public class Downloader {
     // 下载资源
     private ResourceInfo resourceInfo;
 
+    private ConvertUtil convertUtil;
+
     // 分块任务list
     List<DownloadProcessor> downloadTask = new ArrayList<>();
     // 线程list
     List<Thread> downloadThreadList = new ArrayList<>();
 
     // 初始时开启的线程数
-    int threadNum = 20;
+    int threadNum = 1;
+
+    {
+        convertUtil = new ConvertUtil();
+    }
 
 
     /**
@@ -81,7 +87,7 @@ public class Downloader {
         HttpURLConnection connection_temp = (HttpURLConnection) url.openConnection();
         this.fileSize = connection_temp.getContentLength();
         connection_temp.disconnect();
-        System.out.println("下载文件大小为" + this.fileSize + " bytes");
+        System.out.println("下载文件大小为" + convertUtil.convertSize(fileSize));
     }
 
     private void doDownload() throws IOException {
@@ -104,6 +110,8 @@ public class Downloader {
 
         long start = System.currentTimeMillis();
         downloadThreadList.forEach(e -> e.start());
+
+        // anonymous inner class
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             int timeCost = 0;
@@ -123,7 +131,7 @@ public class Downloader {
                 int currentSpeed =(currentPos - lastPos)/1000;
                 String remainTime = currentSpeed <= 0 ? "--" : (fileSize - hasDownloaded)/currentSpeed + "s";
                 timeCost++;
-                System.out.println(timeCost + " seconds " + threadNum + " threads " + " -- speed -- " + currentSpeed + " KB/s" + "  " + hasDownloaded + "/" + fileSize + " remain " + remainTime);
+                System.out.println(timeCost + " seconds " + threadNum + " threads " + " -- speed -- " + currentSpeed + " KB/s" + "  " + convertUtil.convertSize(hasDownloaded) + "/" + convertUtil.convertSize(fileSize) + " " + convertUtil.getPoint((double)hasDownloaded/fileSize*100, 2) + "% "  + " remain " + remainTime);
             }
         }, 0, 1000);
         for(Thread t : downloadThreadList){
@@ -147,6 +155,13 @@ public class Downloader {
      */
     private void pause(){
 //        for()
+    }
+
+    /**
+     * 恢复下载
+     */
+    private void resume(){
+
     }
 
 
