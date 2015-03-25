@@ -49,7 +49,7 @@ public class Downloader {
     List<Thread> downloadThreadList = new ArrayList<>();
 
     // 初始时开启的线程数
-    int threadNum = 1;
+    int threadNum = 10;
 
     {
         convertUtil = new ConvertUtil();
